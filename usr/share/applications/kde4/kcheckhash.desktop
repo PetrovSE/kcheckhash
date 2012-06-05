@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KCheckHash
+Comment=Calculation and verification of the hash sum
+GenericName=Hash sum calculator
+Exec=kcheckhash
+Icon=security-high
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=Qt;KDE;Utility

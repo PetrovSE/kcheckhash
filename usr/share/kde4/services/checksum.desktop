@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+Icon=security-high
+Actions=ShowHash
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/allfiles
+
+[Desktop Action ShowHash]
+Exec=kcheckhash "%U"
+Icon=security-high
+Name=Show hash

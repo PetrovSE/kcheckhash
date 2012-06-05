@@ -1,0 +1,11 @@
+kcheckhash (0.2) oneiric; urgency=low
+
+  * Update for amd64
+
+ -- Petrov Sergey <petrovse@mail.ru>  Wed, 07 Dec 2011 21:55:31 +0400
+
+kcheckhash (0.1) lucid; urgency=low
+
+  * Initial upload
+
+ -- Petrov Sergey <petrovse@mail.ru>  Mon, 02 May 2011 14:51:50 +0400

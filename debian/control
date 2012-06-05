@@ -1,0 +1,11 @@
+Source: kcheckhash
+Section: kde
+Priority: optional
+Maintainer: Petrov Sergey <petrovse@mail.ru>
+Build-Depends: build-essential, qt4-qmake, libqt4-dev, libmhash-dev
+Standards-Version: 3.8.3
+
+Package: kcheckhash
+Architecture: i386 amd64
+Depends: libqtgui4, libmhash2, ${shlibs:Depends}
+Description: Calculation and verification of the hash sum
