@@ -29,7 +29,7 @@ APPD  = $$USRD/applications/kde4
 clean.depends += fullclean
 fullclean.commands = \
     rm -rf $(OBJECTS_DIR);\
-    rm -rf $(DESTDIR); \
+    rm -rf $$BIND; \
     rm -f  *.mk; \
     rm -f  *.session; \
     rm -f  *.tags; \
