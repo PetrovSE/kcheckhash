@@ -29,7 +29,7 @@ APPD  = $$USRD/applications/kde4
 clean.depends += fullclean
 fullclean.commands = \
     rm -rf $(OBJECTS_DIR);\
-    rm -rf $$BIND; \
+    rm -rf $(DESTDIR); \
     rm -f  *.mk; \
     rm -f  *.session; \
     rm -f  *.tags; \
@@ -43,12 +43,12 @@ install.depends =
 install.commands = \
     $(INSTALL_FILE) $$SERVD/$$MODR /$$SERVD; \
     $(INSTALL_FILE) $$APPD/$$MODL /$$APPD;   \
-    $(INSTALL_PROGRAM) $$BIND/$$MOD /$$BIND
+    $(INSTALL_PROGRAM) $$BIND/$$MOD /$(DESTDIR)
 
 uninstall.depends =
 uninstall.commands = \
     $(DEL_FILE) /$$SERVD/$$MODR; \
     $(DEL_FILE) /$$APPD/$$MODL;  \
-    $(DEL_FILE) /$$BIND/$$MOD
+    $(DEL_FILE) /$(DESTDIR)/$$MOD
 
 QMAKE_EXTRA_TARGETS += clean fullclean install uninstall
