@@ -17,7 +17,8 @@ install: build
 	dh_prep
 	dh_installdirs
 	qmake
-	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE)
+	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/tmp install
 	dh_install
 
 binary-indep: build install

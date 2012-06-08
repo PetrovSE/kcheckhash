@@ -1,5 +1,5 @@
 #!/bin/sh
 
 dpkg-buildpackage -rfakeroot
-make clean
+make purge
 rm -f Makefile
