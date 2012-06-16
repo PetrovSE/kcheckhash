@@ -17,14 +17,10 @@
  *   along with kcheckhash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui>
 #include "checksum.h"
 
 
-#define BUFF_SIZE			8192
-
-
-QCheckSum::QCheckSum( QMainDialog *parent, hashid id, const QString &name, const QString &file ) :
+QCheckSum::QCheckSum( QMainWindow *parent, hashid id, const QString &name, const QString &file ) :
 	m_id( id ),
 	m_name( name ),
 	m_file( file )
@@ -32,9 +28,9 @@ QCheckSum::QCheckSum( QMainDialog *parent, hashid id, const QString &name, const
 	m_stop		= false;
 	m_progress	= 0;
 
-	connect( this, SIGNAL( emitAdd( const QString &, const QString & ) ), parent, SLOT( onAdd( const QString &, const QString & ) ) );
-	connect( this, SIGNAL( emitUpdate( void ) ), parent, SLOT( onUpdate( void ) ) );
-	connect( this, SIGNAL( finished( void ) ), parent, SLOT( onFinished( void ) ) );
+	connect( this, SIGNAL( sigAdd( const QString &, const QString & ) ), parent, SLOT( onAdd( const QString &, const QString & ) ) );
+	connect( this, SIGNAL( sigUpdate( void ) ), parent, SLOT( onProgress( void ) ) );
+	connect( this, SIGNAL( finished( void ) ), parent, SLOT( onUpdate( void ) ) );
 
 	start();
 }
@@ -59,7 +55,7 @@ void QCheckSum::run( void )
 		if( td == MHASH_FAILED )
 			break;
 
-		double percent = (double)PROG_SIZE / ( (double)m_file.size() + 0.1 );
+		double percent = (double)PROGRESS_SIZE / ( (double)m_file.size() + 0.1 );
 
 
 		while( 1 )
@@ -84,7 +80,7 @@ void QCheckSum::run( void )
 
 		mhash_deinit( td, hash );
 		if( len )
-			emit emitAdd( m_name, QByteArray( (const char *)hash, len ).toHex() );
+			emit sigAdd( m_name, QByteArray( (const char *)hash, len ).toHex() );
 
 		break;
 	}
@@ -93,7 +89,7 @@ void QCheckSum::run( void )
 	delete hash;
 	
 	m_file.close();
-	setProgress( PROG_SIZE );
+	setProgress( PROGRESS_SIZE );
 }
 
 
@@ -127,5 +123,5 @@ void QCheckSum::setProgress( int prog )
 	m_lock.unlock();
 
 	if( upd )
-		emit emitUpdate();
+		emit sigUpdate();
 }

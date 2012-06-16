@@ -13,13 +13,17 @@ RESOURCES = ./resource/resource.qrc
     <File Name="src/main.cpp"/>
     <File Name="src/main-dlg.cpp"/>
     <File Name="src/checksum.cpp"/>
+    <File Name="src/preferences-dlg.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resource">
     <File Name="resource/main-dlg.ui"/>
+    <File Name="resource/preferences-dlg.ui"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="src/checksum.h"/>
     <File Name="src/main-dlg.h"/>
+    <File Name="src/preferences-dlg.h"/>
+    <File Name="src/hashitem.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

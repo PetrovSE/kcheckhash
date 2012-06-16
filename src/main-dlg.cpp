@@ -17,11 +17,8 @@
  *   along with kcheckhash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGui>
 #include "main-dlg.h"
-#include "checksum.h"
-
-#define APP_NAME		"KCheckHash"
+#include "preferences-dlg.h"
 
 
 QMainDialog::QMainDialog( const QString &file ) :
@@ -29,22 +26,89 @@ QMainDialog::QMainDialog( const QString &file ) :
 	m_cross( ":/icons/cross.png" )
 {
 	setupUi( this ); // this sets up GUI
-
+	loadHashItems();
+	
  	tableView->setModel( &m_model );
 	tableView->setContextMenuPolicy( Qt::CustomContextMenu );
 	pushButton->setIcon( m_cross );
 
 	progressBar->setMinimum( 0 );
-	progressBar->setMaximum( PROG_SIZE );
+	progressBar->setMaximum( PROGRESS_SIZE );
 
 	m_model.setColumnCount( 2 );
 
-	connect( this, SIGNAL( emitCheck( const QString & ) ), this, SLOT( onCheck( const QString & ) ) );
 	connect( lineEdit, SIGNAL( textChanged( const QString & ) ), this, SLOT( onCheck( const QString & ) ) );
 	connect( buttonBox, SIGNAL( clicked( QAbstractButton * ) ), this, SLOT( onButtonClick( QAbstractButton * ) ) );
 	connect( tableView, SIGNAL( customContextMenuRequested( const QPoint & ) ), this, SLOT( onShowContextMenu( const QPoint & ) ) );
 
-	start( file );
+	connect( actionOpenFile, SIGNAL( activated() ), this, SLOT( onOpen() ) );
+	connect( actionQuit, SIGNAL( activated() ), this, SLOT( close() ) );
+
+	connect( actionStart, SIGNAL( activated() ), this, SLOT( onStart() ) );
+	connect( actionStop, SIGNAL( activated() ), this, SLOT( onStop() ) );
+	connect( actionPreferences, SIGNAL( activated() ), this, SLOT( onPreferences() ) );
+
+	connect( actionAbout, SIGNAL( activated() ), this, SLOT( onAbout() ) );
+	connect( actionAboutQt, SIGNAL( activated() ), this, SLOT( onAboutQt() ) );
+
+	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
+
+	setFile( file );
+	onStart();
+}
+
+
+QMainDialog::~QMainDialog( void )
+{
+	unloadHashItems();
+}
+
+
+void QMainDialog::loadHashItems( void )
+{
+	m_hashs.append( new QHashItem( "CRC32",  MHASH_CRC32,  true, true ) );
+	m_hashs.append( new QHashItem( "CRC32B", MHASH_CRC32B, false ) );
+
+	m_hashs.append( new QHashItem( "MD2", MHASH_MD2, false, true ) );
+	m_hashs.append( new QHashItem( "MD4", MHASH_MD4, false ) );
+	m_hashs.append( new QHashItem( "MD5", MHASH_MD5, true  ) );
+
+	m_hashs.append( new QHashItem( "SHA1",   MHASH_SHA1,   true, true  ) );
+	m_hashs.append( new QHashItem( "SHA224", MHASH_SHA224, false ) );
+	m_hashs.append( new QHashItem( "SHA256", MHASH_SHA256, true  ) );
+	m_hashs.append( new QHashItem( "SHA384", MHASH_SHA384, false ) );
+	m_hashs.append( new QHashItem( "SHA512", MHASH_SHA512, false ) );
+
+	m_hashs.append( new QHashItem( "HAVAL128", MHASH_HAVAL128, false, true ) );
+	m_hashs.append( new QHashItem( "HAVAL160", MHASH_HAVAL160, false ) );
+	m_hashs.append( new QHashItem( "HAVAL192", MHASH_HAVAL192, false ) );
+	m_hashs.append( new QHashItem( "HAVAL224", MHASH_HAVAL224, false ) );
+	m_hashs.append( new QHashItem( "HAVAL256", MHASH_HAVAL256, false ) );
+
+	m_hashs.append( new QHashItem( "TIGER128", MHASH_TIGER128, false, true ) );
+	m_hashs.append( new QHashItem( "TIGER160", MHASH_TIGER160, false ) );
+	m_hashs.append( new QHashItem( "TIGER192", MHASH_TIGER192, false ) );
+
+	m_hashs.append( new QHashItem( "RIPEMD128", MHASH_RIPEMD128, false, true ) );
+	m_hashs.append( new QHashItem( "RIPEMD256", MHASH_RIPEMD256, false ) );
+	m_hashs.append( new QHashItem( "RIPEMD320", MHASH_RIPEMD320, false ) );
+
+	m_hashs.append( new QHashItem( "SNEFRU128", MHASH_SNEFRU128, false, true ) );
+	m_hashs.append( new QHashItem( "SNEFRU256", MHASH_SNEFRU256, false ) );
+
+	m_hashs.append( new QHashItem( "GOST",      MHASH_GOST,      false, true ) );
+	m_hashs.append( new QHashItem( "RIPEMD160", MHASH_RIPEMD160, false ) );
+	m_hashs.append( new QHashItem( "ADLER32",   MHASH_ADLER32,   false ) );
+	m_hashs.append( new QHashItem( "WHIRLPOOL", MHASH_WHIRLPOOL, false ) );
+}
+
+
+void QMainDialog::unloadHashItems( void )
+{
+	foreach( QHashItem *item, m_hashs )
+		delete item;
+		
+	m_hashs.clear();
 }
 
 
@@ -91,21 +155,33 @@ void QMainDialog::onCheck( const QString &hash )
 }
 
 
-void QMainDialog::onUpdate( void )
+void QMainDialog::onProgress( void )
 {
-	int prog = PROG_SIZE;
-	QCheckSum *item;
+	int prog = PROGRESS_SIZE;
 
-	foreach( item, m_calcs )
+	foreach( QCheckSum *item, m_calcs )
 		prog = std::min( prog, item->progress() );
 
 	progressBar->setValue( prog );
 }
 
 
-void QMainDialog::onFinished( void )
+void QMainDialog::onUpdate( void )
 {
-	emit emitCheck( lineEdit->text() );
+	bool working = false;
+	foreach( QCheckSum *item, m_calcs )
+	{
+		if( item->isRunning() )
+		{
+			working = true;
+			break;
+		}
+	}
+
+	actionStart->setEnabled( !working );
+	actionStop->setEnabled( working );
+
+	onCheck( lineEdit->text() );
 }
 
 
@@ -118,7 +194,7 @@ void QMainDialog::onButtonClick( QAbstractButton *button )
 		break;
 
 	case QDialogButtonBox::Open:
-		open();
+		onOpen();
 		break;
 
 	default:
@@ -150,14 +226,7 @@ void QMainDialog::onShowContextMenu( const QPoint &point )
 }
 
 
-void QMainDialog::closeEvent( QCloseEvent *event )
-{
-	stop();
-	QMainWindow::closeEvent( event );
-}
-
-
-void QMainDialog::open( void )
+void QMainDialog::onOpen( void )
 {
 	QString file = QFileDialog::getOpenFileName
 		(
@@ -170,44 +239,116 @@ void QMainDialog::open( void )
 	if( file.isEmpty() )
 		return;
 
-	start( file );
+	setFile( file );
+	onStart();
 }
 
 
-void QMainDialog::start( const QString &file )
+void QMainDialog::onStart( void )
 {
-	stop();
+	clearModel();
 
-	if( file.isEmpty() )
+	if( m_file.isEmpty() )
 		return;
 
-	QFileInfo info( file );
-	setWindowTitle( APP_NAME ": " + info.fileName() );
-	m_path = info.absolutePath();
+	foreach( QHashItem *item, m_hashs )
+	{
+		if( item->active() )
+			m_calcs.append( new QCheckSum( this, item->id(), item->name(), m_file ) );
+	}
 
-	m_calcs.append( new QCheckSum( this,	MHASH_CRC32,	"CRC32",	file ) );
-	m_calcs.append( new QCheckSum( this,	MHASH_MD5,		"MD5",		file ) );
-	m_calcs.append( new QCheckSum( this,	MHASH_SHA1,		"SHA1",		file ) );
-	m_calcs.append( new QCheckSum( this,	MHASH_SHA256,	"SHA256",	file ) );
+	onUpdate();
 }
 
 
-void QMainDialog::stop( void )
+void QMainDialog::onStop( void )
 {
-	QCheckSum *item;
-	foreach( item, m_calcs )
+	foreach( QCheckSum *item, m_calcs )
 	{
 		if( item->isRunning() )
 		{
 			item->stop();
 			item->wait();
 		}
-
-		delete item;
 	}
+	
+	onUpdate();
+}
+
+
+void QMainDialog::onPreferences( void )
+{
+	QPreferencesDialog dialog( &m_hashs );
+	
+	if( dialog.exec() )
+		onStart();
+}
+
+
+void QMainDialog::onAbout( void )
+{
+	QMessageBox::about
+		(
+			this,
+			tr( ABOUT_APP ),
+			tr
+			(
+				"<h4>" ABOUT_APP "</h4><br>"
+				"This program is graphical user interface<br>"
+				"for calculation and verification of the hash sum<br>"
+				"with the help of the Mhash library.<br>"
+				"Version 0.3a<br>"
+				"<br>"
+				"Developers:<br>"
+				"Sergey Petrov <a href='mailto:" MAIL_PSE "?Subject=" APP_NAME "'>" MAIL_PSE "</a><br>"
+				"Dmitriy Perlow<br>"
+				"<br>"
+				"Copyright (C) 2011-12 PetrovSE<br>"
+				"<br>"
+				"Mhash library: <a href='" WWW_MHASH "'>" WWW_MHASH "</a>"
+			)
+		);
+}
+
+
+void QMainDialog::onAboutQt( void )
+{
+	QMessageBox::aboutQt( this );
+}
+
+
+void QMainDialog::setFile( const QString &file )
+{
+	QString appName = APP_NAME;
+	m_file = file;
+
+	if( !m_file.isEmpty() )
+	{
+		QFileInfo info( m_file );
+		appName += ": " + info.fileName();
+		m_path   = info.absolutePath();
+	}
+
+	setWindowTitle( appName );
+}
+
+
+void QMainDialog::clearModel( void )
+{
+	onStop();
+
+	foreach( QCheckSum *item, m_calcs )
+		delete item;
 
 	m_calcs.clear();
 	m_model.clear();
 
-	setWindowTitle( APP_NAME );
+	onUpdate();
+}
+
+
+void QMainDialog::closeEvent( QCloseEvent *event )
+{
+	clearModel();
+	QMainWindow::closeEvent( event );
 }

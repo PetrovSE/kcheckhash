@@ -17,42 +17,62 @@
  *   along with kcheckhash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CHECKSUM_H_
-#define _CHECKSUM_H_
+#ifndef _HASH_ITEM_H_
+#define _HASH_ITEM_H_
 
-#include <QtGui>
+#include <QString>
 #include <mhash.h>
 
-
-#define PROGRESS_SIZE			256
-#define BUFF_SIZE				8192
-
-
-class QCheckSum : public QThread
+class QHashItem
 {
-	Q_OBJECT
-
 public:
-	QCheckSum( QMainWindow *parent, hashid id, const QString &name, const QString &file );
+	QHashItem( const QString &name, hashid id, bool active, bool newBox = false )
+	{
+		m_name	= name;
+		m_id	= id;
+		m_def	= active;
 
-	void run( void );
-	void stop( void );
-	int  progress( void );
+		m_newBox = newBox;
+		setActive( active );
+	}
 
-signals:
-	void sigAdd( const QString &name, const QString &hash );
-	void sigUpdate( void );
+	QString name( void ) const
+	{
+		return m_name;
+	}
+	
+	hashid id( void ) const
+	{
+		return m_id;
+	}
 
+	bool newBox( void ) const
+	{
+		return m_newBox;
+	}
+
+	bool def( void ) const
+	{
+		return m_def;
+	}
+
+	bool active( void ) const
+	{
+		return m_active;
+	}
+	
+	void setActive( bool active )
+	{
+		m_active = active;
+	}
+	
 private:
-	hashid			m_id;
-	QString			m_name;
-	QFile			m_file;
+	QString		m_name;
+	hashid		m_id;
 
-	QMutex			m_lock;
-	bool			m_stop;
-	int				m_progress;
-
-	void setProgress( int prog );
+	bool		m_def;
+	bool		m_active;
+	bool		m_newBox;
 };
 
-#endif // _CHECKSUM_H_
+#endif // _HASH_ITEM_H_

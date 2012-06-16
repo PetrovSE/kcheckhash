@@ -28,9 +28,9 @@ QMAKE_CXXFLAGS_RELEASE = -O2 -fdata-sections -ffunction-sections
 QMAKE_LFLAGS_RELEASE   = -s -Wl,--gc-sections
 
 
-SOURCES     = src/main.cpp src/main-dlg.cpp src/checksum.cpp
-HEADERS     = src/main-dlg.h src/checksum.h
-FORMS       = resource/main-dlg.ui
+SOURCES     = src/main.cpp src/main-dlg.cpp src/preferences-dlg.cpp src/checksum.cpp
+HEADERS     = src/main-dlg.h src/preferences-dlg.h src/checksum.h
+FORMS       = resource/main-dlg.ui resource/preferences-dlg.ui
 RESOURCES   = resource/resource.qrc
 
 LIBS        = -lmhash
@@ -44,6 +44,8 @@ purge.depends += clean
 purge.commands = \
     rm -rf $$OBJECTS_DIR;\
     rm -rf $$BINARY_DIR; \
+    rm -rf Debug; \
+    rm -rf Release; \
     rm -f  *.mk; \
     rm -f  *.session; \
     rm -f  *.tags; \

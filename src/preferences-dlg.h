@@ -17,42 +17,55 @@
  *   along with kcheckhash.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CHECKSUM_H_
-#define _CHECKSUM_H_
+#ifndef _PREFERENCES_DLG_H_
+#define _PREDERENCES_DLG_H_
 
 #include <QtGui>
-#include <mhash.h>
+#include <QCheckBox>
+#include "hashitem.h"
+#include "ui_preferences-dlg.h"
 
 
-#define PROGRESS_SIZE			256
-#define BUFF_SIZE				8192
-
-
-class QCheckSum : public QThread
+class QHashButton : public QCheckBox
 {
 	Q_OBJECT
-
+	
 public:
-	QCheckSum( QMainWindow *parent, hashid id, const QString &name, const QString &file );
-
-	void run( void );
-	void stop( void );
-	int  progress( void );
-
-signals:
-	void sigAdd( const QString &name, const QString &hash );
-	void sigUpdate( void );
+	QHashButton( QHashItem &hash ) : QCheckBox( hash.name() )
+	{
+		m_hash = &hash;
+	}
+	
+	QHashItem *hash( void ) const
+	{
+		return m_hash;
+	}
 
 private:
-	hashid			m_id;
-	QString			m_name;
-	QFile			m_file;
-
-	QMutex			m_lock;
-	bool			m_stop;
-	int				m_progress;
-
-	void setProgress( int prog );
+	QHashItem	*m_hash;
 };
 
-#endif // _CHECKSUM_H_
+
+class QPreferencesDialog : public QDialog, private Ui::dialogPreferences
+{
+	Q_OBJECT
+ 
+public:
+	QPreferencesDialog( QList <QHashItem *> *hashs );
+	~QPreferencesDialog( void );
+
+public slots:
+	void onButtonBox( QAbstractButton *button );
+
+protected:
+	void loadHashs( QList <QHashItem *> *hashs );
+	void unloadHashs( void );
+	
+	void getHashsState( bool def );
+	bool setHashsState( void );
+
+	QList <QVBoxLayout *>	m_box;
+	QList <QHashButton *>	m_buttons;
+};
+
+#endif // _PREFERENCES_DLG_H_

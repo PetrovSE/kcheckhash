@@ -21,42 +21,62 @@
 #define _MAIN_DLG_H_
 
 #include <QtGui>
+#include "hashitem.h"
+#include "checksum.h"
 #include "ui_main-dlg.h"
 
-#define PROG_SIZE			256
 
-class QCheckSum;
+#define APP_NAME		"KCheckHash"
+#define ABOUT_APP		"About " APP_NAME
+
+#define MAIL_PSE		"petrovse@mail.ru"
+#define WWW_MHASH		"http://mhash.sourceforge.net/"
+
+
 class QMainDialog : public QMainWindow, private Ui::mainDialog
 {
 	Q_OBJECT
 
 public:
 	QMainDialog( const QString &file = "" );
+	~QMainDialog( void );
 
 public slots:
 	void onAdd( const QString &name, const QString &hash );
 	void onCheck( const QString &hash );
+
+	void onProgress( void );
 	void onUpdate( void );
-	void onFinished( void );
+
 	void onButtonClick( QAbstractButton *button );
 	void onShowContextMenu( const QPoint &point );
 
-signals:
-	void emitCheck( const QString &hash );
+	void onOpen( void );
+	void onStart( void );
+	void onStop( void );
+	void onPreferences( void );
+
+	void onAbout( void );
+	void onAboutQt( void );
 
 private:
 	QStandardItemModel	m_model;
+
 	QList <QCheckSum *>	m_calcs;
+	QList <QHashItem *>	m_hashs;
 
 	QIcon				m_ok;
 	QIcon				m_cross;
+
 	QString				m_path;
+	QString				m_file;
 
+	void loadHashItems( void );
+	void unloadHashItems( void );
+	
+	void setFile( const QString &file );
+	void clearModel( void );
 	void closeEvent( QCloseEvent *event );
-
-	void open( void );
-	void start( const QString &file );
-	void stop( void );
 };
 
 #endif // _MAIN_DLG_H_
