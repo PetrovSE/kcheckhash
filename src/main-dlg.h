@@ -33,8 +33,13 @@
 #define WWW_MHASH		"http://mhash.sourceforge.net/"
 
 
-#define KDE_CFG_PATH	".kde/share/config/"
-#define KDE_CFG_FILE	"kcheckhashrc"
+#define KDE_CFG_FILE	"/.kde/share/config/kcheckhashrc"
+
+#define SEC_WINDOW		"window/"
+#define SEC_HASH		"hash/"
+
+#define KEY_WIDTH		SEC_WINDOW "width"
+#define KEY_HEIGHT		SEC_WINDOW "height"
 
 
 class QMainDialog : public QMainWindow, private Ui::mainDialog
@@ -76,6 +81,7 @@ private:
 	QString		m_file;
 
 	QMutex		m_lock;
+	QSettings	m_settings;
 
 	void loadHashItems( void );
 	void unloadHashItems( void );
@@ -88,6 +94,7 @@ private:
 	void clear( void );
 
 	void setFile( const QString &file );
+	void resizeWindow( void );
 	void closeEvent( QCloseEvent *event );
 };
 

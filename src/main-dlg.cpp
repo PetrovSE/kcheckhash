@@ -24,9 +24,11 @@
 QMainDialog::QMainDialog( const QString &file ) :
 	m_ok( ":/icons/ok.png" ),
 	m_cross( ":/icons/cross.png" ),
-	m_lock( QMutex::Recursive )
+	m_lock( QMutex::Recursive ),
+	m_settings( QDir::homePath() + KDE_CFG_FILE, QSettings::NativeFormat )
 {
 	setupUi( this ); // this sets up GUI
+	resizeWindow();
 
 	loadHashItems();
 	loadConfig();
@@ -117,69 +119,23 @@ void QMainDialog::unloadHashItems( void )
 
 void QMainDialog::loadConfig( void )
 {
-	QFile file( QDir::homePath() + "/" + KDE_CFG_PATH + "/" + KDE_CFG_FILE );
-	if( !file.open( QIODevice::ReadOnly | QIODevice::Text ) )
-		return;
-	
-	QTextStream stream( &file );
-	QList <QString> hashs;
-	
-	while( 1 )
-	{
-		QString val = stream.readLine();
-		if( val.isNull() )
-			break;
-
-		val = val.trimmed();
-
-		if( val.isEmpty() )
-			continue;
-
-		hashs.append( val );
-	}
-	
-	file.close();
-
 	foreach( QHashItem *item, m_hashs )
 	{
-		item->setActive( false );
-		
-		foreach( QString val, hashs )
-		{
-			if( item->name() == val )
-			{
-				item->setActive( true );
-				break;
-			}
-		}
+		int val = m_settings.value( SEC_HASH + item->name(), -1 ).toInt();
+		if( val < 0 )
+			continue;
+			
+		item->setActive( val == 1 );
 	}
 }
 
 
 void QMainDialog::saveConfig( void )
 {
-	QString home = QDir::homePath();
-	QFile file( home + "/" + KDE_CFG_PATH + "/" + KDE_CFG_FILE );
-	QDir  path( home );
-	
-	if( !path.exists() )
-		return;
-
-	if( !path.mkpath( KDE_CFG_PATH ) )
-		return;
-		
-	if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) )
-		return;
-		
-	QTextStream stream( &file );
-
 	foreach( QHashItem *item, m_hashs )
-	{
-		if( item->active() )
-			stream << item->name() << "\n";
-	}
-	
-	file.close();
+		m_settings.setValue( SEC_HASH + item->name(), item->active() ? 1 : 0 );
+
+	m_settings.sync();
 }
 
 
@@ -440,8 +396,24 @@ void QMainDialog::clear( void )
 }
 
 
+void QMainDialog::resizeWindow( void )
+{
+	int width  = m_settings.value( KEY_WIDTH,  -1 ).toInt();
+	int height = m_settings.value( KEY_HEIGHT, -1 ).toInt();
+	
+	if( width < 0 || height < 0 )
+		return;
+
+	resize( width, height );
+}
+
+
 void QMainDialog::closeEvent( QCloseEvent *event )
 {
+	m_settings.setValue( KEY_WIDTH,  width() ); 
+	m_settings.setValue( KEY_HEIGHT, height() );
+	m_settings.sync();
+
 	clear();
 	QMainWindow::closeEvent( event );
 }
