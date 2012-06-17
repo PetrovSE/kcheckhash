@@ -29,7 +29,7 @@ QCheckSum::QCheckSum( QMainWindow *parent, hashid id, const QString &name, const
 	m_progress	= 0;
 
 	connect( this, SIGNAL( sigAdd( const QString &, const QString & ) ), parent, SLOT( onAdd( const QString &, const QString & ) ) );
-	connect( this, SIGNAL( sigUpdate( void ) ), parent, SLOT( onProgress( void ) ) );
+	connect( this, SIGNAL( sigProgress( void ) ), parent, SLOT( onProgress( void ) ) );
 	connect( this, SIGNAL( finished( void ) ), parent, SLOT( onUpdate( void ) ) );
 
 	start();
@@ -95,33 +95,24 @@ void QCheckSum::run( void )
 
 void QCheckSum::stop( void )
 {
-	m_lock.lock();
+	QMutexLocker locker( &m_lock );
 	m_stop = true;
-	m_lock.unlock();
 }
 
 
 int QCheckSum::progress( void )
 {
-	m_lock.lock();
-	int prog = m_progress;
-	m_lock.unlock();
-	return prog;
+	QMutexLocker locker( &m_lock );
+	return m_progress;
 }
 
 
 void QCheckSum::setProgress( int prog )
 {
-	bool upd = false;
-
-	m_lock.lock();
+	QMutexLocker locker( &m_lock );
 	if( m_progress != prog )
 	{
 		m_progress = prog;
-		upd = true;
+		emit sigProgress();
 	}
-	m_lock.unlock();
-
-	if( upd )
-		emit sigUpdate();
 }

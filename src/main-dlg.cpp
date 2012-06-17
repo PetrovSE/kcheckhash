@@ -23,10 +23,13 @@
 
 QMainDialog::QMainDialog( const QString &file ) :
 	m_ok( ":/icons/ok.png" ),
-	m_cross( ":/icons/cross.png" )
+	m_cross( ":/icons/cross.png" ),
+	m_lock( QMutex::Recursive )
 {
 	setupUi( this ); // this sets up GUI
+
 	loadHashItems();
+	loadConfig();
 	
  	tableView->setModel( &m_model );
 	tableView->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -112,9 +115,79 @@ void QMainDialog::unloadHashItems( void )
 }
 
 
+void QMainDialog::loadConfig( void )
+{
+	QFile file( QDir::homePath() + "/" + KDE_CFG_PATH + "/" + KDE_CFG_FILE );
+	if( !file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+		return;
+	
+	QTextStream stream( &file );
+	QList <QString> hashs;
+	
+	while( 1 )
+	{
+		QString val = stream.readLine();
+		if( val.isNull() )
+			break;
+
+		val = val.trimmed();
+
+		if( val.isEmpty() )
+			continue;
+
+		hashs.append( val );
+	}
+	
+	file.close();
+
+	foreach( QHashItem *item, m_hashs )
+	{
+		item->setActive( false );
+		
+		foreach( QString val, hashs )
+		{
+			if( item->name() == val )
+			{
+				item->setActive( true );
+				break;
+			}
+		}
+	}
+}
+
+
+void QMainDialog::saveConfig( void )
+{
+	QString home = QDir::homePath();
+	QFile file( home + "/" + KDE_CFG_PATH + "/" + KDE_CFG_FILE );
+	QDir  path( home );
+	
+	if( !path.exists() )
+		return;
+
+	if( !path.mkpath( KDE_CFG_PATH ) )
+		return;
+		
+	if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) )
+		return;
+		
+	QTextStream stream( &file );
+
+	foreach( QHashItem *item, m_hashs )
+	{
+		if( item->active() )
+			stream << item->name() << "\n";
+	}
+	
+	file.close();
+}
+
+
 void QMainDialog::onAdd( const QString &name, const QString &hash )
 {
+	QMutexLocker locker( &m_lock );
 	QList<QStandardItem *> rows;
+
 	QStandardItem *p_name = new QStandardItem;
 	QStandardItem *p_hash = new QStandardItem;
 
@@ -130,6 +203,7 @@ void QMainDialog::onAdd( const QString &name, const QString &hash )
 
 void QMainDialog::onCheck( const QString &hash )
 {
+	QMutexLocker locker( &m_lock );
 	QString test = hash.trimmed();
 	QString found;
 
@@ -157,6 +231,7 @@ void QMainDialog::onCheck( const QString &hash )
 
 void QMainDialog::onProgress( void )
 {
+	QMutexLocker locker( &m_lock );
 	int prog = PROGRESS_SIZE;
 
 	foreach( QCheckSum *item, m_calcs )
@@ -168,7 +243,9 @@ void QMainDialog::onProgress( void )
 
 void QMainDialog::onUpdate( void )
 {
+	QMutexLocker locker( &m_lock );
 	bool working = false;
+
 	foreach( QCheckSum *item, m_calcs )
 	{
 		if( item->isRunning() )
@@ -246,32 +323,20 @@ void QMainDialog::onOpen( void )
 
 void QMainDialog::onStart( void )
 {
-	clearModel();
-
+	clear();
+	onUpdate();
+	
 	if( m_file.isEmpty() )
 		return;
 
-	foreach( QHashItem *item, m_hashs )
-	{
-		if( item->active() )
-			m_calcs.append( new QCheckSum( this, item->id(), item->name(), m_file ) );
-	}
-
+	start();
 	onUpdate();
 }
 
 
 void QMainDialog::onStop( void )
 {
-	foreach( QCheckSum *item, m_calcs )
-	{
-		if( item->isRunning() )
-		{
-			item->stop();
-			item->wait();
-		}
-	}
-	
+	stop();
 	onUpdate();
 }
 
@@ -281,13 +346,18 @@ void QMainDialog::onPreferences( void )
 	QPreferencesDialog dialog( &m_hashs );
 	
 	if( dialog.exec() )
+	{
+		saveConfig();
 		onStart();
+	}
 }
 
 
 void QMainDialog::onAbout( void )
 {
-	QMessageBox::about
+	QMessageBox about;
+	about.setTextFormat( Qt::RichText );
+	about.about
 		(
 			this,
 			tr( ABOUT_APP ),
@@ -297,7 +367,7 @@ void QMainDialog::onAbout( void )
 				"This program is graphical user interface<br>"
 				"for calculation and verification of the hash sum<br>"
 				"with the help of the Mhash library.<br>"
-				"Version 0.3a<br>"
+				"Version 0.3a2<br>"
 				"<br>"
 				"Developers:<br>"
 				"Sergey Petrov <a href='mailto:" MAIL_PSE "?Subject=" APP_NAME "'>" MAIL_PSE "</a><br>"
@@ -333,22 +403,45 @@ void QMainDialog::setFile( const QString &file )
 }
 
 
-void QMainDialog::clearModel( void )
+void QMainDialog::start( void )
 {
-	onStop();
+	clear();
+
+	foreach( QHashItem *item, m_hashs )
+	{
+		if( item->active() )
+			m_calcs.append( new QCheckSum( this, item->id(), item->name(), m_file ) );
+	}
+}
+
+
+void QMainDialog::stop( void )
+{
+	foreach( QCheckSum *item, m_calcs )
+	{
+		if( item->isRunning() )
+		{
+			item->stop();
+			item->wait();
+		}
+	}
+}
+
+
+void QMainDialog::clear( void )
+{
+	stop();
 
 	foreach( QCheckSum *item, m_calcs )
 		delete item;
 
 	m_calcs.clear();
 	m_model.clear();
-
-	onUpdate();
 }
 
 
 void QMainDialog::closeEvent( QCloseEvent *event )
 {
-	clearModel();
+	clear();
 	QMainWindow::closeEvent( event );
 }

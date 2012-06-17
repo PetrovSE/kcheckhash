@@ -33,6 +33,10 @@
 #define WWW_MHASH		"http://mhash.sourceforge.net/"
 
 
+#define KDE_CFG_PATH	".kde/share/config/"
+#define KDE_CFG_FILE	"kcheckhashrc"
+
+
 class QMainDialog : public QMainWindow, private Ui::mainDialog
 {
 	Q_OBJECT
@@ -65,17 +69,25 @@ private:
 	QList <QCheckSum *>	m_calcs;
 	QList <QHashItem *>	m_hashs;
 
-	QIcon				m_ok;
-	QIcon				m_cross;
+	QIcon		m_ok;
+	QIcon		m_cross;
 
-	QString				m_path;
-	QString				m_file;
+	QString		m_path;
+	QString		m_file;
+
+	QMutex		m_lock;
 
 	void loadHashItems( void );
 	void unloadHashItems( void );
 	
+	void loadConfig( void );
+	void saveConfig( void );
+
+	void start( void );
+	void stop( void );
+	void clear( void );
+
 	void setFile( const QString &file );
-	void clearModel( void );
 	void closeEvent( QCloseEvent *event );
 };
 

@@ -41,16 +41,16 @@ public:
 
 signals:
 	void sigAdd( const QString &name, const QString &hash );
-	void sigUpdate( void );
+	void sigProgress( void );
 
 private:
-	hashid			m_id;
-	QString			m_name;
-	QFile			m_file;
+	hashid		m_id;
+	QString		m_name;
+	QFile		m_file;
 
-	QMutex			m_lock;
-	bool			m_stop;
-	int				m_progress;
+	QMutex		m_lock;
+	bool		m_stop;
+	int			m_progress;
 
 	void setProgress( int prog );
 };
