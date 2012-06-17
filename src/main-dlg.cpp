@@ -58,6 +58,16 @@ QMainDialog::QMainDialog( const QString &file ) :
 
 	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
 
+	actionOpenFile->setIcon( QIcon::fromTheme( "document-open" ) );
+	actionQuit->setIcon( QIcon::fromTheme( "window-close" ) );
+
+	actionStart->setIcon( QIcon::fromTheme( "media-playback-start" ) );
+	actionStop->setIcon( QIcon::fromTheme( "media-playback-stop" ) );
+	actionPreferences->setIcon( QIcon::fromTheme( "configure" ) );
+
+	actionAbout->setIcon( QIcon::fromTheme( "help-about" ) );
+	actionAboutQt->setIcon( QIcon( ":/icons/qt.png" ) );
+
 	setFile( file );
 	onStart();
 }
@@ -311,9 +321,7 @@ void QMainDialog::onPreferences( void )
 
 void QMainDialog::onAbout( void )
 {
-	QMessageBox about;
-	about.setTextFormat( Qt::RichText );
-	about.about
+	QMessageBox::about
 		(
 			this,
 			tr( ABOUT_APP ),

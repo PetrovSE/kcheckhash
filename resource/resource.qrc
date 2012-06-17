@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>qt.png</file>
     <file>main.png</file>
     <file>ok.png</file>
     <file>cross.png</file>
