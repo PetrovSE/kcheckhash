@@ -32,9 +32,6 @@
 #define MAIL_PSE		"petrovse@mail.ru"
 #define WWW_MHASH		"http://mhash.sourceforge.net/"
 
-
-#define KDE_CFG_FILE	"/.kde/share/config/kcheckhashrc"
-
 #define SEC_WINDOW		"window/"
 #define SEC_HASH		"hash/"
 

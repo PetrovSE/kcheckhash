@@ -25,7 +25,7 @@ QMainDialog::QMainDialog( const QString &file ) :
 	m_ok( ":/icons/ok.png" ),
 	m_cross( ":/icons/cross.png" ),
 	m_lock( QMutex::Recursive ),
-	m_settings( QDir::homePath() + KDE_CFG_FILE, QSettings::NativeFormat )
+	m_settings( QString( APP_NAME ).toLower(), QString( APP_NAME ).toLower() )
 {
 	setupUi( this ); // this sets up GUI
 	resizeWindow();
@@ -331,7 +331,7 @@ void QMainDialog::onAbout( void )
 				"This program is graphical user interface<br>"
 				"for calculation and verification of the hash sum<br>"
 				"with the help of the Mhash library.<br>"
-				"Version 0.3a2<br>"
+				"Version 0.3<br>"
 				"<br>"
 				"Developers:<br>"
 				"Sergey Petrov <a href='mailto:" MAIL_PSE "?Subject=" APP_NAME "'>" MAIL_PSE "</a><br>"
