@@ -70,6 +70,9 @@ private:
 
 	QList <QCheckSum *>	m_calcs;
 	QList <QHashItem *>	m_hashs;
+	
+	QPushButton	m_start;
+	QPushButton	m_stop;
 
 	QIcon		m_ok;
 	QIcon		m_cross;

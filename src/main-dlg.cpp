@@ -46,6 +46,9 @@ QMainDialog::QMainDialog( const QString &file ) :
 	connect( buttonBox, SIGNAL( clicked( QAbstractButton * ) ), this, SLOT( onButtonClick( QAbstractButton * ) ) );
 	connect( tableView, SIGNAL( customContextMenuRequested( const QPoint & ) ), this, SLOT( onShowContextMenu( const QPoint & ) ) );
 
+	connect( &m_start, SIGNAL( clicked() ), this, SLOT( onStart() ) );
+	connect( &m_stop, SIGNAL( clicked() ), this, SLOT( onStop() ) );
+
 	connect( actionOpenFile, SIGNAL( activated() ), this, SLOT( onOpen() ) );
 	connect( actionQuit, SIGNAL( activated() ), this, SLOT( close() ) );
 
@@ -55,6 +58,15 @@ QMainDialog::QMainDialog( const QString &file ) :
 
 	connect( actionAbout, SIGNAL( activated() ), this, SLOT( onAbout() ) );
 	connect( actionAboutQt, SIGNAL( activated() ), this, SLOT( onAboutQt() ) );
+
+	buttonBox->addButton( &m_start, QDialogButtonBox::ResetRole );
+	buttonBox->addButton( &m_stop, QDialogButtonBox::ResetRole );
+
+	m_start.setText( tr( "Start" ) );
+	m_stop.setText( tr( "Stop" ) );
+
+	m_start.setIcon( QIcon::fromTheme( "media-playback-start" ) );
+	m_stop.setIcon( QIcon::fromTheme( "media-playback-stop" ) );
 
 	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
 
@@ -223,6 +235,9 @@ void QMainDialog::onUpdate( void )
 
 	actionStart->setEnabled( !working );
 	actionStop->setEnabled( working );
+
+	m_start.setEnabled( !working );
+	m_stop.setEnabled( working );
 
 	onCheck( lineEdit->text() );
 }
