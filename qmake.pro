@@ -46,6 +46,7 @@ purge.commands = \
     rm -rf $$BINARY_DIR; \
     rm -rf Debug; \
     rm -rf Release; \
+    rm -rf .clang; \
     rm -f  *.mk; \
     rm -f  *.session; \
     rm -f  *.tags; \

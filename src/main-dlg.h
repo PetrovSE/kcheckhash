@@ -83,6 +83,9 @@ private:
 	QMutex		m_lock;
 	QSettings	m_settings;
 
+	void connectSignals( void );
+	void setAppearance( void );
+
 	void loadHashItems( void );
 	void unloadHashItems( void );
 	

@@ -42,6 +42,28 @@ QMainDialog::QMainDialog( const QString &file ) :
 
 	m_model.setColumnCount( 2 );
 
+	buttonBox->addButton( &m_start, QDialogButtonBox::ResetRole );
+	buttonBox->addButton( &m_stop, QDialogButtonBox::ResetRole );
+
+	m_start.setText( tr( "Start" ) );
+	m_stop.setText( tr( "Stop" ) );
+
+	connectSignals();
+	setAppearance();
+	setFile( file );
+
+	onStart();
+}
+
+
+QMainDialog::~QMainDialog( void )
+{
+	unloadHashItems();
+}
+
+
+void QMainDialog::connectSignals( void )
+{
 	connect( lineEdit, SIGNAL( textChanged( const QString & ) ), this, SLOT( onCheck( const QString & ) ) );
 	connect( buttonBox, SIGNAL( clicked( QAbstractButton * ) ), this, SLOT( onButtonClick( QAbstractButton * ) ) );
 	connect( tableView, SIGNAL( customContextMenuRequested( const QPoint & ) ), this, SLOT( onShowContextMenu( const QPoint & ) ) );
@@ -58,36 +80,28 @@ QMainDialog::QMainDialog( const QString &file ) :
 
 	connect( actionAbout, SIGNAL( activated() ), this, SLOT( onAbout() ) );
 	connect( actionAboutQt, SIGNAL( activated() ), this, SLOT( onAboutQt() ) );
-
-	buttonBox->addButton( &m_start, QDialogButtonBox::ResetRole );
-	buttonBox->addButton( &m_stop, QDialogButtonBox::ResetRole );
-
-	m_start.setText( tr( "Start" ) );
-	m_stop.setText( tr( "Stop" ) );
-
-	m_start.setIcon( QIcon::fromTheme( "media-playback-start" ) );
-	m_stop.setIcon( QIcon::fromTheme( "media-playback-stop" ) );
-
-	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
-
-	actionOpenFile->setIcon( QIcon::fromTheme( "document-open" ) );
-	actionQuit->setIcon( QIcon::fromTheme( "window-close" ) );
-
-	actionStart->setIcon( QIcon::fromTheme( "media-playback-start" ) );
-	actionStop->setIcon( QIcon::fromTheme( "media-playback-stop" ) );
-	actionPreferences->setIcon( QIcon::fromTheme( "configure" ) );
-
-	actionAbout->setIcon( QIcon::fromTheme( "help-about" ) );
-	actionAboutQt->setIcon( QIcon( ":/icons/qt.png" ) );
-
-	setFile( file );
-	onStart();
 }
 
 
-QMainDialog::~QMainDialog( void )
+void QMainDialog::setAppearance( void )
 {
-	unloadHashItems();
+	QStyle *mainStyle = style();
+
+	m_start.setIcon( mainStyle->standardIcon( QStyle::SP_MediaPlay ) );
+	m_stop.setIcon( mainStyle->standardIcon( QStyle::SP_MediaStop ) );
+
+	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
+	actionOpenFile->setIcon( mainStyle->standardIcon( QStyle::SP_DialogOpenButton ) );
+	
+	actionQuit->setIcon( mainStyle->standardIcon( QStyle::SP_DialogCloseButton ) );
+
+	actionStart->setIcon( mainStyle->standardIcon( QStyle::SP_MediaPlay ) );
+	actionStop->setIcon( mainStyle->standardIcon( QStyle::SP_MediaStop ) );
+
+	actionPreferences->setIcon( QIcon::fromTheme( "configure" ) );
+
+	actionAbout->setIcon( mainStyle->standardIcon( QStyle::SP_MessageBoxInformation ) );
+	actionAboutQt->setIcon( QIcon( ":/icons/qt.png" ) );
 }
 
 
