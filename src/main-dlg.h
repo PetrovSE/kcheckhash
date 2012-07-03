@@ -30,6 +30,7 @@
 #define ABOUT_APP		"About " APP_NAME
 
 #define MAIL_PSE		"petrovse@mail.ru"
+#define WWW_GITHUB		"https://github.com/PetrovSE/kcheckhash/"
 #define WWW_MHASH		"http://mhash.sourceforge.net/"
 
 #define SEC_WINDOW		"window/"

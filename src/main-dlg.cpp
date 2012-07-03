@@ -366,6 +366,7 @@ void QMainDialog::onAbout( void )
 				"Sergey Petrov <a href='mailto:" MAIL_PSE "?Subject=" APP_NAME "'>" MAIL_PSE "</a><br>"
 				"Dmitriy Perlow<br>"
 				"<br>"
+				"The source code: <a href='" WWW_GITHUB "'>" WWW_GITHUB "</a><br>"
 				"Copyright (C) 2011-12 PetrovSE<br>"
 				"<br>"
 				"Mhash library: <a href='" WWW_MHASH "'>" WWW_MHASH "</a>"
