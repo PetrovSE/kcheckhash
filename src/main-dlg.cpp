@@ -50,9 +50,9 @@ QMainDialog::QMainDialog( const QString &file ) :
 
 	connectSignals();
 	setAppearance();
-	setFile( file );
 
-	onStart();
+	setFile( file );
+	onStart( true, false );
 }
 
 
@@ -163,6 +163,8 @@ void QMainDialog::loadConfig( void )
 			
 		item->setActive( val == 1 );
 	}
+
+	m_config.setAutoCalc( m_settings.value( KEY_AUTOCALC, true ).toBool() );
 }
 
 
@@ -171,6 +173,7 @@ void QMainDialog::saveConfig( void )
 	foreach( QHashItem *item, m_hashs )
 		m_settings.setValue( SEC_HASH + item->name(), item->active() ? 1 : 0 );
 
+	m_settings.setValue( KEY_AUTOCALC, m_config.autoCalc() );
 	m_settings.sync();
 }
 
@@ -312,18 +315,21 @@ void QMainDialog::onOpen( void )
 		return;
 
 	setFile( file );
-	onStart();
+	onStart( true, false );
 }
 
 
-void QMainDialog::onStart( void )
+void QMainDialog::onStart( bool stop, bool force )
 {
-	clear();
-	onUpdate();
-	
-	if( m_file.isEmpty() )
-		return;
+	if( stop )
+	{
+		clear();
+		onUpdate();
+	}
 
+	if( ( !m_config.autoCalc() && !force ) || m_file.isEmpty() )
+		return;
+	
 	start();
 	onUpdate();
 }
@@ -338,13 +344,17 @@ void QMainDialog::onStop( void )
 
 void QMainDialog::onPreferences( void )
 {
-	QPreferencesDialog dialog( &m_hashs );
+	QPreferencesDialog dialog( m_hashs, m_config );
+	int ret = dialog.exec();
 	
-	if( dialog.exec() )
-	{
+	if( ret & QPrefCode::ChangeConfig )
+		m_config = dialog.getConfig();
+
+	if( ret & QPrefCode::NeedSave )
 		saveConfig();
-		onStart();
-	}
+		
+	if( ret & QPrefCode::ChangeHash )
+		onStart( false, false );
 }
 
 

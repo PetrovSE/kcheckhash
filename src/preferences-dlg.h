@@ -23,10 +23,22 @@
 #include <QtGui>
 #include <QCheckBox>
 #include "hashitem.h"
+#include "config.h"
 #include "ui_preferences-dlg.h"
 
 
-class QHashButton : public QCheckBox
+namespace QPrefCode
+{
+	const int None			= 0x0000;
+	const int NeedSave		= 0x0100;
+	
+	const int ChangeConfig	= 0x0001 | NeedSave;
+	const int ChangeHash	= 0x0002 | NeedSave;
+};
+
+
+class QHashButton:
+	public QCheckBox
 {
 	Q_OBJECT
 	
@@ -46,23 +58,33 @@ private:
 };
 
 
-class QPreferencesDialog : public QDialog, private Ui::dialogPreferences
+class QPreferencesDialog: 
+	public QDialog,
+	public QConfigApp,
+	private Ui::dialogPreferences
 {
 	Q_OBJECT
  
 public:
-	QPreferencesDialog( QList <QHashItem *> *hashs );
+	QPreferencesDialog( QList <QHashItem *> &hashs, QConfigApp &config );
 	~QPreferencesDialog( void );
+
+	QConfigApp getConfig( void ) const
+	{
+		return *this;
+	}
 
 public slots:
 	void onButtonBox( QAbstractButton *button );
+	void onAutoCalc( void );
 
 protected:
+	void loadConfig( void );
 	void loadHashs( QList <QHashItem *> *hashs );
 	void unloadHashs( void );
-	
+
 	void getHashsState( bool def );
-	bool setHashsState( void );
+	int  setHashsState( void );
 
 	QList <QVBoxLayout *>	m_box;
 	QList <QHashButton *>	m_buttons;

@@ -2,6 +2,8 @@ TEMPLATE       = app
 CONFIG         = release qt lex yacc uic resources warn_on precompile_header
 MAKEFILE       = Makefile
 
+TRANSLATIONS   = kcheckhash_ru.ts
+
 OBJECTS_DIR    = obj
 BINARY_DIR     = bin
 DESKTOP_DIR    = src/dsk

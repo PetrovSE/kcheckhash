@@ -22,6 +22,7 @@
 
 #include <QtGui>
 #include "hashitem.h"
+#include "config.h"
 #include "checksum.h"
 #include "ui_main-dlg.h"
 
@@ -35,12 +36,17 @@
 
 #define SEC_WINDOW		"window/"
 #define SEC_HASH		"hash/"
+#define SEC_OPTIONS		"options/"
 
 #define KEY_WIDTH		SEC_WINDOW "width"
 #define KEY_HEIGHT		SEC_WINDOW "height"
 
+#define KEY_AUTOCALC	SEC_OPTIONS "autocalc"
 
-class QMainDialog : public QMainWindow, private Ui::mainDialog
+
+class QMainDialog:
+	public QMainWindow,
+	private Ui::mainDialog
 {
 	Q_OBJECT
 
@@ -59,7 +65,7 @@ public slots:
 	void onShowContextMenu( const QPoint &point );
 
 	void onOpen( void );
-	void onStart( void );
+	void onStart( bool stop = true, bool force = true );
 	void onStop( void );
 	void onPreferences( void );
 
@@ -69,6 +75,7 @@ public slots:
 private:
 	QStandardItemModel	m_model;
 
+	QConfigApp			m_config;
 	QList <QCheckSum *>	m_calcs;
 	QList <QHashItem *>	m_hashs;
 	

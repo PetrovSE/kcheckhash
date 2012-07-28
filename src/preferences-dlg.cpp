@@ -20,13 +20,16 @@
 #include "preferences-dlg.h"
 
 
-QPreferencesDialog::QPreferencesDialog( QList <QHashItem *> *hashs )
+QPreferencesDialog::QPreferencesDialog( QList <QHashItem *> &hashs, QConfigApp &config ):
+	QConfigApp( config )
 {
 	setupUi( this );
 	
 	connect( buttonBox, SIGNAL( clicked( QAbstractButton * ) ), this, SLOT( onButtonBox( QAbstractButton * ) ) );
+	connect( checkBoxAutoCalc, SIGNAL( toggled( bool ) ), this, SLOT( onAutoCalc() ) );
 
-	loadHashs( hashs );
+	loadConfig();
+	loadHashs( &hashs );
 	getHashsState( false );
 }
 
@@ -42,11 +45,16 @@ void QPreferencesDialog::onButtonBox( QAbstractButton *button )
 	switch( buttonBox->standardButton( button ) )
 	{
 	case QDialogButtonBox::Ok:
-		done( setHashsState() );
+		done
+			(
+				QPrefCode::ChangeConfig
+				|
+				setHashsState()
+			);
 		break;
 		
 	case QDialogButtonBox::Cancel:
-		done( false );
+		done( QPrefCode::None );
 		break;
 		
 	case QDialogButtonBox::RestoreDefaults:
@@ -56,6 +64,18 @@ void QPreferencesDialog::onButtonBox( QAbstractButton *button )
 	default:
 		return;
 	}
+}
+
+
+void QPreferencesDialog::onAutoCalc( void )
+{
+	setAutoCalc( checkBoxAutoCalc->checkState() == Qt::Checked );
+}
+
+
+void QPreferencesDialog::loadConfig( void )
+{
+	checkBoxAutoCalc->setCheckState( autoCalc() ? Qt::Checked : Qt::Unchecked );
 }
 
 
@@ -107,9 +127,9 @@ void QPreferencesDialog::getHashsState( bool def )
 }
 
 
-bool QPreferencesDialog::setHashsState( void )
+int QPreferencesDialog::setHashsState( void )
 {
-	bool update = false;
+	int ret = QPrefCode::None;
 
 	foreach( QHashButton *button, m_buttons )
 	{
@@ -118,10 +138,10 @@ bool QPreferencesDialog::setHashsState( void )
 		
 		if( state != hash->active() )
 		{
-			update = true;
+			ret = QPrefCode::ChangeHash;
 			hash->setActive( state );
 		}
 	}
 	
-	return update;
+	return ret;
 }
