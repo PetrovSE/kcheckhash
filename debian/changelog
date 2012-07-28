@@ -1,3 +1,9 @@
+kcheckhash (0.31) precise; urgency=low
+
+  * Add option for autostart of calculation
+
+ -- Petrov Sergey <petrovse@mail.ru>  Sat, 28 Jul 2012 18:15:03 +0400
+
 kcheckhash (0.3) precise; urgency=low
 
   * Added menu
