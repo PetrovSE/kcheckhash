@@ -1,33 +1,38 @@
 TEMPLATE       = app
-CONFIG         = release qt lex yacc uic resources warn_on precompile_header
+CONFIG        += release qt lex yacc uic resources warn_on precompile_header
 MAKEFILE       = Makefile
 
-TRANSLATIONS   = kcheckhash_ru.ts
 
 OBJECTS_DIR    = obj
 BINARY_DIR     = bin
-DESKTOP_DIR    = src/dsk
+SOURCE_DIR     = src
 DEBIAN_DIR     = debian
 
+DESKTOP_DIR    = $$SOURCE_DIR/dsk
+TS_DIR         = $$SOURCE_DIR/ts
 TARGET         = $$BINARY_DIR/kcheckhash
-INCLUDEPATH    = .
+
+TRANSLATIONS   = $$TS_DIR/kcheckhash_ru.ts
 
 
 kcheckhash.path  = /usr/bin
 kcheckhash.files = $$TARGET
 
+kcheckhash_loc.path  = /usr/share/qt4/translations
+kcheckhash_loc.files = $$BINARY_DIR/*.qm
+
 checksum_dsk.path  = /usr/share/kde4/services
-checksum_dsk.files =  $$DESKTOP_DIR/checksum.desktop
+checksum_dsk.files = $$DESKTOP_DIR/checksum.desktop
 
 kcheckhash_dsk.path  = /usr/share/applications/kde4
-kcheckhash_dsk.files =  $$DESKTOP_DIR/kcheckhash.desktop
+kcheckhash_dsk.files = $$DESKTOP_DIR/kcheckhash.desktop
 
-INSTALLS += kcheckhash checksum_dsk kcheckhash_dsk
+INSTALLS += kcheckhash kcheckhash_loc checksum_dsk kcheckhash_dsk
 
 
 QMAKE_CFLAGS_RELEASE   = -O2 -fdata-sections -ffunction-sections
 QMAKE_CXXFLAGS_RELEASE = -O2 -fdata-sections -ffunction-sections
-QMAKE_LFLAGS_RELEASE   = -s -Wl,--gc-sections
+QMAKE_LFLAGS_RELEASE  += -s -Wl,--gc-sections
 
 
 SOURCES     = src/main.cpp src/main-dlg.cpp src/preferences-dlg.cpp src/checksum.cpp
@@ -35,7 +40,9 @@ HEADERS     = src/main-dlg.h src/preferences-dlg.h src/checksum.h
 FORMS       = resource/main-dlg.ui resource/preferences-dlg.ui
 RESOURCES   = resource/resource.qrc
 
+INCLUDEPATH = .
 LIBS        = -lmhash
+
 
 mkdir.depends  =
 mkdir.commands = \
@@ -49,14 +56,21 @@ purge.commands = \
     rm -rf Debug; \
     rm -rf Release; \
     rm -rf .clang; \
-    rm -f  *.mk; \
-    rm -f  *.session; \
-    rm -f  *.tags; \
+    rm -f *.mk; \
+    rm -f *.session; \
+    rm -f *.tags; \
     rm -rf $$DEBIAN_DIR/tmp; \
-    rm -f  $$DEBIAN_DIR/substvars; \
-    rm -f  $$DEBIAN_DIR/debhelper.log; \
-    rm -f  $$DEBIAN_DIR/files; \
-    rm -f  build-stamp
+    rm -f $$DEBIAN_DIR/substvars; \
+    rm -f $$DEBIAN_DIR/debhelper.log; \
+    rm -f $$DEBIAN_DIR/files; \
+    rm -f build-stamp
 
-QMAKE_EXTRA_TARGETS += mkdir purge
-PRE_TARGETDEPS       = mkdir
+updateqm.depends  = mkdir
+updateqm.input    = TRANSLATIONS
+updateqm.output   = $$BINARY_DIR/${QMAKE_FILE_BASE}.qm
+updateqm.CONFIG  += no_link
+updateqm.commands = lrelease ${QMAKE_FILE_IN} -qm $$BINARY_DIR/${QMAKE_FILE_BASE}.qm
+
+QMAKE_EXTRA_COMPILERS += updateqm
+QMAKE_EXTRA_TARGETS   += mkdir purge
+PRE_TARGETDEPS         = mkdir compiler_updateqm_make_all

@@ -28,7 +28,10 @@
 
 
 #define APP_NAME		"KCheckHash"
-#define ABOUT_APP		"About " APP_NAME
+
+#define H4S				"<h4>"
+#define H4T				"</h4>"
+#define BR				"<br>"
 
 #define MAIL_PSE		"petrovse@mail.ru"
 #define WWW_GITHUB		"https://github.com/PetrovSE/kcheckhash/"

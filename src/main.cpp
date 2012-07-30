@@ -20,11 +20,33 @@
 #include <QApplication>
 #include "main-dlg.h"
 
+#define APP_MAJOR_VERSION		0		
+#define APP_MINOR_VERSION		4	
+
 
 int main( int nargs, char *argv[] )
 {
 	QApplication app( nargs, argv );
 	QMainDialog *dialog;
+
+	QString locale = QLocale::system().name();
+	QString appLoc = QString( APP_NAME ).toLower() + "_" + locale;
+	QString trPath = QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+
+	QTranslator translator;
+	QTranslator qtTranslator;
+
+	if( !translator.load( appLoc ) )
+		translator.load( appLoc, trPath );
+
+	qtTranslator.load( "qt_" + locale, trPath );
+
+	QString version;
+	version.sprintf( "%d.%d", APP_MAJOR_VERSION, APP_MINOR_VERSION );
+	app.setApplicationVersion( version );
+
+	app.installTranslator( &translator );
+	app.installTranslator( &qtTranslator );
 
 	if( nargs > 1 )
 		dialog = new QMainDialog( QString::fromUtf8( argv[1] ) );

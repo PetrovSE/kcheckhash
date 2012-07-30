@@ -90,7 +90,7 @@ void QMainDialog::setAppearance( void )
 	m_start.setIcon( mainStyle->standardIcon( QStyle::SP_MediaPlay ) );
 	m_stop.setIcon( mainStyle->standardIcon( QStyle::SP_MediaStop ) );
 
-	actionOpenFile->setShortcut( tr( "Ctrl+O" ) );
+	actionOpenFile->setShortcut( QString( "Ctrl+O" ) );
 	actionOpenFile->setIcon( mainStyle->standardIcon( QStyle::SP_DialogOpenButton ) );
 	
 	actionQuit->setIcon( mainStyle->standardIcon( QStyle::SP_DialogCloseButton ) );
@@ -360,27 +360,42 @@ void QMainDialog::onPreferences( void )
 
 void QMainDialog::onAbout( void )
 {
+	QString aboutText =
+		H4S + tr( "About #APP_NAME" ) + H4T + BR
+		+
+		tr
+		(
+			"This program is graphical user interface<br>"
+			"for calculation and verification of the hash sum<br>"
+			"with the help of the Mhash library.<br>"
+			"Version #VERSION"
+		) + BR + BR
+		+
+		tr( "Developers:" ) + BR
+		+
+		tr( "Sergey Petrov" ) + " <a href='mailto:#MAIL_PSE?Subject=#APP_NAME'>#MAIL_PSE</a>" + BR
+		+
+		tr( "Dmitriy Perlow" ) + BR + BR
+		+
+		tr( "The source code:" ) + " <a href='#WWW_GITHUB'>#WWW_GITHUB</a>" + BR
+		+
+		tr( "Copyright (C) 2011-12 PetrovSE" ) + BR + BR
+		+
+		tr( "Mhash library:" ) + " <a href='#WWW_MHASH'>#WWW_MHASH</a>";
+
+	aboutText.replace( "#APP_NAME", APP_NAME );
+	aboutText.replace( "#VERSION", QApplication::applicationVersion() );
+
+	aboutText.replace( "#MAIL_PSE", MAIL_PSE );
+
+	aboutText.replace( "#WWW_GITHUB", WWW_GITHUB );
+	aboutText.replace( "#WWW_MHASH", WWW_MHASH );
+
 	QMessageBox::about
 		(
 			this,
-			tr( ABOUT_APP ),
-			tr
-			(
-				"<h4>" ABOUT_APP "</h4><br>"
-				"This program is graphical user interface<br>"
-				"for calculation and verification of the hash sum<br>"
-				"with the help of the Mhash library.<br>"
-				"Version 0.3<br>"
-				"<br>"
-				"Developers:<br>"
-				"Sergey Petrov <a href='mailto:" MAIL_PSE "?Subject=" APP_NAME "'>" MAIL_PSE "</a><br>"
-				"Dmitriy Perlow<br>"
-				"<br>"
-				"The source code: <a href='" WWW_GITHUB "'>" WWW_GITHUB "</a><br>"
-				"Copyright (C) 2011-12 PetrovSE<br>"
-				"<br>"
-				"Mhash library: <a href='" WWW_MHASH "'>" WWW_MHASH "</a>"
-			)
+			tr( "About" ),
+			aboutText
 		);
 }
 
