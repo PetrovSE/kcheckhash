@@ -65,12 +65,5 @@ purge.commands = \
     rm -f $$DEBIAN_DIR/files; \
     rm -f build-stamp
 
-updateqm.depends  = mkdir
-updateqm.input    = TRANSLATIONS
-updateqm.output   = $$BINARY_DIR/${QMAKE_FILE_BASE}.qm
-updateqm.CONFIG  += no_link
-updateqm.commands = lrelease ${QMAKE_FILE_IN} -qm $$BINARY_DIR/${QMAKE_FILE_BASE}.qm
-
-QMAKE_EXTRA_COMPILERS += updateqm
 QMAKE_EXTRA_TARGETS   += mkdir purge
-PRE_TARGETDEPS         = mkdir compiler_updateqm_make_all
+PRE_TARGETDEPS         = mkdir

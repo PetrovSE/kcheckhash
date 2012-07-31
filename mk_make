@@ -1,0 +1,10 @@
+#!/bin/sh
+
+BIND=bin
+SRCD=src/ts
+
+mkdir -p $BIND
+lrelease qmake.pro
+mv $SRCD/*.qm $BIND
+
+qmake

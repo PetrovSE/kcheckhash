@@ -1,3 +1,9 @@
+kcheckhash (0.4) precise; urgency=low
+
+  * Add russian translation
+
+ -- Petrov Sergey <petrovse@mail.ru>  Tue, 31 Jul 2012 12:14:17 +0400
+
 kcheckhash (0.31) precise; urgency=low
 
   * Add option for autostart of calculation

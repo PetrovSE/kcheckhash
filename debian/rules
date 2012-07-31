@@ -16,7 +16,7 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	qmake
+	./mk_make
 	$(MAKE)
 	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/tmp install
 	dh_install

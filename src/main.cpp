@@ -20,8 +20,8 @@
 #include <QApplication>
 #include "main-dlg.h"
 
-#define APP_MAJOR_VERSION		0		
-#define APP_MINOR_VERSION		4	
+#define APP_MAJOR_VERSION		0
+#define APP_MINOR_VERSION		4
 
 
 int main( int nargs, char *argv[] )

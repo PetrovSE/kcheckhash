@@ -78,8 +78,8 @@
     </message>
     <message>
         <location filename="../../resource/preferences-dlg.ui" line="61"/>
-        <source>Autostart of calculation</source>
-        <translation>Автостарт расчета</translation>
+        <source>Automatic recalculation</source>
+        <translation>Автоматический пересчёт</translation>
     </message>
 </context>
 <context>
