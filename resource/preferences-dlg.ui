@@ -58,7 +58,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="checkBoxAutoCalc">
         <property name="text">
-         <string>Automatic recalculation</string>
+         <string>Autostart</string>
         </property>
        </widget>
       </item>

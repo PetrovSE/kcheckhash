@@ -21,7 +21,7 @@
     <message>
         <location filename="../main-dlg.cpp" line="366"/>
         <source>This program is graphical user interface&lt;br&gt;for calculation and verification of the hash sum&lt;br&gt;with the help of the Mhash library.&lt;br&gt;Version #VERSION</source>
-        <translation>Эта программа является графическим интерфейсом&lt;br&gt;для расчёта и проверки хэш суммы&lt;br&gt;с помощью библиотеки Mhash.&lt;br&gt;Версия #VERSION</translation>
+        <translation>Эта программа является графическим интерфейсом&lt;br&gt;для расчёта и проверки хэш-сумм&lt;br&gt;с помощью библиотеки Mhash.&lt;br&gt;Версия #VERSION</translation>
     </message>
     <message>
         <location filename="../main-dlg.cpp" line="374"/>
@@ -69,7 +69,7 @@
     <message>
         <location filename="../../resource/preferences-dlg.ui" line="33"/>
         <source>Available hash sums</source>
-        <translation>Доступные хэш суммы</translation>
+        <translation>Доступные хэш-суммы</translation>
     </message>
     <message>
         <location filename="../../resource/preferences-dlg.ui" line="52"/>
@@ -78,8 +78,8 @@
     </message>
     <message>
         <location filename="../../resource/preferences-dlg.ui" line="61"/>
-        <source>Automatic recalculation</source>
-        <translation>Автоматический пересчёт</translation>
+        <source>Autostart</source>
+        <translation>Автостарт</translation>
     </message>
 </context>
 <context>
@@ -87,12 +87,12 @@
     <message>
         <location filename="../../resource/main-dlg.ui" line="78"/>
         <source>Hash sum comparison</source>
-        <translation>Сравнение хэш суммы</translation>
+        <translation>Сравнение хэш-сумм</translation>
     </message>
     <message>
         <location filename="../../resource/main-dlg.ui" line="84"/>
         <source>You can insert here the value of the hash sum for comparison.</source>
-        <translation>Вы можете вставить сюда значение хэш суммы для сравнения.</translation>
+        <translation>Вы можете вставить сюда значение хэш-суммы для сравнения.</translation>
     </message>
     <message>
         <location filename="../../resource/main-dlg.ui" line="143"/>

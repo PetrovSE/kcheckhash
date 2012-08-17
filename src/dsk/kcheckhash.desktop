@@ -1,12 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=KCheckHash
-Comment=Calculation and verification of the hash sum
-GenericName=Hash sum calculator
+Categories=Qt;KDE;Utility
+
 Exec=kcheckhash
-Icon=security-high
+Name=KCheckHash
+
+GenericName=Hash sum calculator
+GenericName[ru]=Калькулятор хэш-сумм
+
+Comment=Calculation and verification of the hash sum
+Comment[ru]=Вычисление и проверка хэш-сумм
+
 MimeType=application/x-tar;application/x-compressed-tar;application/x-bzip-compressed-tar;application/x-tarz;application/x-xz-compressed-tar;application/x-lzma-compressed-tar;application/x-deb;application/x-cd-image;application/x-bcpio;application/x-cpio;application/x-cpio-compressed;application/x-sv4cpio;application/x-sv4crc;application/x-rpm;application/x-servicepack;application/x-rar;application/x-7z-compressed;application/x-java-archive;application/zip;application/x-compress;application/x-gzip;application/x-bzip;application/x-bzip2;application/x-lzma;application/x-xz;application/lha;application/x-lha;application/maclha;
+Icon=security-high
 StartupNotify=false
 Terminal=false
 Type=Application
-Categories=Qt;KDE;Utility
