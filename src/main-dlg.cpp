@@ -71,15 +71,15 @@ void QMainDialog::connectSignals( void )
 	connect( &m_start, SIGNAL( clicked() ), this, SLOT( onStart() ) );
 	connect( &m_stop, SIGNAL( clicked() ), this, SLOT( onStop() ) );
 
-	connect( actionOpenFile, SIGNAL( activated() ), this, SLOT( onOpen() ) );
-	connect( actionQuit, SIGNAL( activated() ), this, SLOT( close() ) );
+	connect( actionOpenFile, SIGNAL( triggered() ), this, SLOT( onOpen() ) );
+	connect( actionQuit, SIGNAL( triggered() ), this, SLOT( close() ) );
 
-	connect( actionStart, SIGNAL( activated() ), this, SLOT( onStart() ) );
-	connect( actionStop, SIGNAL( activated() ), this, SLOT( onStop() ) );
-	connect( actionPreferences, SIGNAL( activated() ), this, SLOT( onPreferences() ) );
+	connect( actionStart, SIGNAL( triggered() ), this, SLOT( onStart() ) );
+	connect( actionStop, SIGNAL( triggered() ), this, SLOT( onStop() ) );
+	connect( actionPreferences, SIGNAL( triggered() ), this, SLOT( onPreferences() ) );
 
-	connect( actionAbout, SIGNAL( activated() ), this, SLOT( onAbout() ) );
-	connect( actionAboutQt, SIGNAL( activated() ), this, SLOT( onAboutQt() ) );
+	connect( actionAbout, SIGNAL( triggered() ), this, SLOT( onAbout() ) );
+	connect( actionAboutQt, SIGNAL( triggered() ), this, SLOT( onAboutQt() ) );
 }
 
 
@@ -131,15 +131,15 @@ void QMainDialog::loadHashItems( void )
 	m_hashs.append( new QHashItem( "TIGER192", MHASH_TIGER192, false ) );
 
 	m_hashs.append( new QHashItem( "RIPEMD128", MHASH_RIPEMD128, false, true ) );
+	m_hashs.append( new QHashItem( "RIPEMD160", MHASH_RIPEMD160, false ) );
 	m_hashs.append( new QHashItem( "RIPEMD256", MHASH_RIPEMD256, false ) );
 	m_hashs.append( new QHashItem( "RIPEMD320", MHASH_RIPEMD320, false ) );
 
 	m_hashs.append( new QHashItem( "SNEFRU128", MHASH_SNEFRU128, false, true ) );
 	m_hashs.append( new QHashItem( "SNEFRU256", MHASH_SNEFRU256, false ) );
 
-	m_hashs.append( new QHashItem( "GOST",      MHASH_GOST,      false, true ) );
-	m_hashs.append( new QHashItem( "RIPEMD160", MHASH_RIPEMD160, false ) );
-	m_hashs.append( new QHashItem( "ADLER32",   MHASH_ADLER32,   false ) );
+	m_hashs.append( new QHashItem( "ADLER32",   MHASH_ADLER32,   false, true ) );
+	m_hashs.append( new QHashItem( "GOST",      MHASH_GOST,      false ) );
 	m_hashs.append( new QHashItem( "WHIRLPOOL", MHASH_WHIRLPOOL, false ) );
 }
 

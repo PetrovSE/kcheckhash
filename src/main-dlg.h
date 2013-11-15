@@ -20,7 +20,9 @@
 #ifndef _MAIN_DLG_H_
 #define _MAIN_DLG_H_
 
-#include <QtGui>
+#include "qt4to5.h"
+#include INCL_GUI
+
 #include "hashitem.h"
 #include "config.h"
 #include "checksum.h"

@@ -20,8 +20,9 @@
 #ifndef _PREFERENCES_DLG_H_
 #define _PREDERENCES_DLG_H_
 
-#include <QtGui>
-#include <QCheckBox>
+#include "qt4to5.h"
+#include INCL_GUI
+
 #include "hashitem.h"
 #include "config.h"
 #include "ui_preferences-dlg.h"

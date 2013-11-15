@@ -20,7 +20,9 @@
 #ifndef _CHECKSUM_H_
 #define _CHECKSUM_H_
 
-#include <QtGui>
+#include "qt4to5.h"
+#include INCL_GUI
+
 #include <mhash.h>
 
 

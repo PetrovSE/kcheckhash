@@ -49,7 +49,7 @@ int main( int nargs, char *argv[] )
 	app.installTranslator( &qtTranslator );
 
 	if( nargs > 1 )
-		dialog = new QMainDialog( QString::fromUtf8( argv[1] ) );
+		dialog = new QMainDialog( QTextCodec::codecForLocale()->toUnicode( argv[1] ) );
 	else
 		dialog = new QMainDialog();
 
