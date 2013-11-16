@@ -1,3 +1,4 @@
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE       = app
 CONFIG        += release qt lex yacc uic resources warn_on precompile_header
 MAKEFILE       = Makefile
